@@ -28,7 +28,8 @@ export class Step {
 
     // Stato esecuzione
     this.success = false;
-    this.error = null;
+    //this.error = null;
+    this.errors = [];
     this.usedCache = false;
 
     // Metriche
@@ -47,9 +48,13 @@ export class Step {
     const data = {
       sub_prompt: this.subPrompt,
       timeout: this.timeout,
-      expectations: this.expectations
-    }
-    return crypto.createHash("md5").update(JSON.stringify(data)).digest("hex").substring(0, 8);
+      expectations: this.expectations,
+    };
+    return crypto
+      .createHash("md5")
+      .update(JSON.stringify(data))
+      .digest("hex")
+      .substring(0, 8);
   }
 
   /**
@@ -88,13 +93,13 @@ export class Step {
     });
   }
 
-  toJSON(){
+  toJSON() {
     return {
       id: this.id,
       sub_prompt: this.subPrompt,
       timeout: this.timeout,
-      expectations: this._stepExpectations
-    }
+      expectations: this._stepExpectations,
+    };
   }
 
   /**
@@ -113,7 +118,10 @@ export class Step {
         output: this.outputToken,
         cached: this.cachedToken,
       },
-      error: this.error ? this.error.message : null,
+      errors:
+        this.errors.length > 0
+          ? this.errors.map((e) => e.message || e.toString())
+          : null,
     };
   }
 
@@ -122,7 +130,7 @@ export class Step {
    */
   reset() {
     this.success = false;
-    this.error = null;
+    this.errors = null;
     this.usedCache = false;
   }
 }

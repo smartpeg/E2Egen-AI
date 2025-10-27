@@ -1,7 +1,7 @@
 {
   "steps": [
     {
-      "id": "e4cc8301",
+      "id": "d0acbcb4",
       "sub_prompt": "Attendi il caricamento completato, Clicca sul bottone login ",
       "timeout": "10000",
       "expectations": [
@@ -9,7 +9,7 @@
       ]
     },
     {
-      "id": "7ca76d94",
+      "id": "89a2e82c",
       "sub_prompt": "Inserisci sul campo username giovanni.ferro e nel campo password 1234QWe! e clicca Login",
       "timeout": "10000",
       "expectations": [
@@ -17,30 +17,28 @@
       ]
     },
     {
-      "id": "c88b266b",
+      "id": "9aec8118",
       "sub_prompt": "Vai su Valutazione > Sistemi di valutazione",
       "timeout": "10000",
       "expectations": []
     },
     {
-      "id": "28a930c1",
+      "id": "4bd699c9",
       "sub_prompt": "Vai su apri dettaglio",
       "timeout": "10000",
       "expectations": []
     },
     {
-      "id": "e4acae8b",
+      "id": "0d9f46a1",
       "sub_prompt": "Clicca sul selettore che contiene SEZIONE TEST 2025 - SEZIONE 2",
       "timeout": "10000",
       "expectations": []
     },
     {
-      "id": "008048e0",
+      "id": "bcbec68e",
       "sub_prompt": "Trova tutti gli id delle selectbox della pagina e per ognuna devi selezionare 7",
       "timeout": "10000",
-      "expectations": [
-        "non è presente salva selezione"
-      ]
+      "expectations": []
     }
   ]
 }

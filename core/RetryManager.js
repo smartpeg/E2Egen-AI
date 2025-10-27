@@ -62,7 +62,11 @@ export class RetryManager {
         }
       } catch (error) {
         lastError = error;
-        step.error = error;
+        step.errors.push({
+          message: error.message,
+          name: error.name,
+          stack: error.stack,
+        });
 
         logger.logAttemptError(step, attemptNumber, error);
         console.log("error: ", typeof (error + ""));

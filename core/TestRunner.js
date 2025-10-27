@@ -53,6 +53,8 @@ export class TestRunner {
           break;
         }
       }
+
+      // Aggiorno Steps.json
       var jsonSteps = [];
       for(const step of steps){
         jsonSteps.push(step.toJSON());

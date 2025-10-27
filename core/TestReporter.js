@@ -49,6 +49,7 @@ export class TestReporter {
    * Registra risultato di uno step
    */
   recordStepResult(step, result) {
+    //console.log(step.errors);
     this.runResults.push({
       index: step.index,
       id: step.id,
@@ -56,7 +57,7 @@ export class TestReporter {
       status: result.success ? "success" : "error",
       attempts: result.attempts,
       usedCache: step.usedCache || false,
-      error: result.error ? result.error.message : null,
+      errors: step.errors.length > 0 ? step.errors : null,
       tokens: {
         input: step.inputToken || 0,
         output: step.outputToken || 0,
