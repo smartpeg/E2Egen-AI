@@ -37,8 +37,8 @@ program
   .option("--htmlclean-keep <items>", "Comma-separated elements to keep", "")
   .option("--nocache", "Disable cache usage")
   .option("--stepspack <name>", "Use steps pack from ./stepspacks/<name>")
-  .option("--html-report", "Generate HTML report")
-  .option("--stop-on-error", "Stop execution on first critical error");
+  .option("--html-report", "Generate HTML report");
+  //.option("--stop-on-error", "Stop execution on first critical error");
 
 program.parse();
 const options = program.opts();

@@ -48,7 +48,7 @@ export class TestRunner {
         // Se lo step ha successo, attendi timeout prima del prossimo
         if (result.success) {
           await this._pause(step.timeout);
-        } else if (this.config.stopOnError) {
+        } else /*if (this.config.stopOnError)*/ {
           console.error(`\n🛑 Esecuzione interrotta per errore critico`);
           break;
         }

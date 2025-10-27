@@ -59,11 +59,13 @@ Genera codice che esegue ESATTAMENTE le seguenti azioni sulla pagina corrente:
 La pagina corrente è: ${url}`;
 
 if(expectations.length > 0){
-  prompt += `\nDevono verificarsi queste expectations (devi essere case insensitive) altrimenti se non sono veriicate devi
-  lanciare un eccezione con il nome dell'expectations: ${expectations}`
+  prompt += `\nDevono verificarsi queste expectations (devi essere case insensitive) altrimenti se non sono verificate devi
+  lanciare un eccezione con il nome dell'expectations: ${expectations}. Devi fare throw new Error SOLO SE una di queste expectations non è verificata.`
+}else{
+  prompt += "\nNon inserire assolutamente nessun throw new Error";
 }
 
-prompt +=  `Devi usare l'oggetto "page" già aperto (non aprire un nuovo browser o una nuova pagina).
+prompt +=  `\nDevi usare l'oggetto "page" già aperto (non aprire un nuovo browser o una nuova pagina).
 Puoi anche usare "expect" se serve per validare elementi visibili o testi, se lanci errori
 assicurati di inserire all'inizio del messaggio del throw: "Test failed:" e poi il motivo
 Non aggiungere testo extra, solo codice JavaScript eseguibile.

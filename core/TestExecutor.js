@@ -107,6 +107,18 @@ export class TestExecutor {
       cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, "");
     }
 
+    // Rimuove tutti gli input ASP.NET nascosti comuni
+    cleaned = cleaned.replace(
+      /<input\s+type="hidden"\s+name="__[A-Z]+"[^>]*>/gi,
+      ""
+    );
+
+   /* Rimuove tutti gli input ASP.NET nascosti comuni esplicitamente
+    cleaned = cleaned.replace(
+      /<input[^>]*(name="__(VIEWSTATE|VIEWSTATEGENERATOR|EVENTVALIDATION|EVENTTARGET|EVENTARGUMENT)")[^>]*>/gi,
+      ""
+    );*/
+
     if (shouldRemove("script")) {
       cleaned = cleaned.replace(
         /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
@@ -137,8 +149,14 @@ export class TestExecutor {
     }
 
     if (shouldRemove("attributes")) {
-      cleaned = cleaned.replace(/\s+data-(?!testid)[a-z-]+=["'][^"']*["']/gi, "");
-      cleaned = cleaned.replace(/\s+aria-(?!label)[a-z-]+=["'][^"']*["']/gi, "");
+      cleaned = cleaned.replace(
+        /\s+data-(?!testid)[a-z-]+=["'][^"']*["']/gi,
+        ""
+      );
+      cleaned = cleaned.replace(
+        /\s+aria-(?!label)[a-z-]+=["'][^"']*["']/gi,
+        ""
+      );
     }
 
     if (shouldRemove("longtext")) {
@@ -161,7 +179,10 @@ export class TestExecutor {
 
     function cleanNode(node) {
       node.childNodes.forEach((child) => {
-        if (child.nodeType === 3 && child.textContent.trim().length > maxLength) {
+        if (
+          child.nodeType === 3 &&
+          child.textContent.trim().length > maxLength
+        ) {
           child.textContent = "";
         } else if (child.nodeType === 1) {
           cleanNode(child);

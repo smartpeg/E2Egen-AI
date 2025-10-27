@@ -1,0 +1,16 @@
+{
+  "steps": [
+    {
+      "id": "91c56a9c",
+      "sub_prompt": "Attendi il caricamento completato, Clicca sul bottone login ",
+      "timeout": "10000",
+      "expectations": []
+    },
+    {
+      "id": "88d5051d",
+      "sub_prompt": "Inserisci sul campo username giovanni.ferro e nel campo password 1234QWe! e clicca Login",
+      "timeout": "10000",
+      "expectations": []
+    }
+  ]
+}

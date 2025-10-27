@@ -1,19 +1,19 @@
 {
   "steps": [
     {
-      "id": "d0acbcb4",
+      "id": "ba9b14ce",
       "sub_prompt": "Attendi il caricamento completato, Clicca sul bottone login ",
       "timeout": "10000",
       "expectations": [
-        "Compare un banner con scritto Application Error"
+        "Non deve comparire un banner di errore (esempio: Application Error)"
       ]
     },
     {
-      "id": "89a2e82c",
+      "id": "7dfa9686",
       "sub_prompt": "Inserisci sul campo username giovanni.ferro e nel campo password 1234QWe! e clicca Login",
       "timeout": "10000",
       "expectations": [
-        "Compare un banner con scritto Application Error"
+        "Non deve comparire un banner di errore (esempio: Application Error)"
       ]
     },
     {
@@ -35,10 +35,12 @@
       "expectations": []
     },
     {
-      "id": "bcbec68e",
-      "sub_prompt": "Trova tutti gli id delle selectbox della pagina e per ognuna devi selezionare 7",
+      "id": "38bf9eca",
+      "sub_prompt": "Trova tutti gli id delle selectbox riguardanti al test di autovalutazione e per ognuna devi selezionare 7 poi clicca su SALVA SELEZIONE",
       "timeout": "10000",
-      "expectations": []
+      "expectations": [
+        "Deve apparire un toast-body e dentro a questo tag ci deve essere traccia di un success e non di un error o warning"
+      ]
     }
   ]
 }

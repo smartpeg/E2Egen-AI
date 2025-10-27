@@ -1,0 +1,30 @@
+{
+  "steps": [
+    {
+      "id": "91c56a9c",
+      "sub_prompt": "Attendi il caricamento completato, Clicca sul bottone login ",
+      "timeout": "10000",
+      "expectations": []
+    },
+    {
+      "id": "88d5051d",
+      "sub_prompt": "Inserisci sul campo username giovanni.ferro e nel campo password 1234QWe! e clicca Login",
+      "timeout": "10000",
+      "expectations": []
+    },
+    {
+      "id": "3eae2f15",
+      "sub_prompt": "Clicca sulla prima opzione (quella dove c'è l'icona del profilo, non l'icona del profilo) nella navbar a sinistra poi clicca su Gestione password",
+      "timeout": "10000",
+      "expectations": []
+    },
+    {
+      "id": "0a3bc9ac",
+      "sub_prompt": "Inserisci in vecchia password: 1234QWe! mentre in nuova password e anche in conferma nuova password inserisci: 1234QWe!! poi clicca su SALVA",
+      "timeout": "10000",
+      "expectations": [
+        "Non deve apparire un banner di warning"
+      ]
+    }
+  ]
+}

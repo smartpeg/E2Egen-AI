@@ -11,14 +11,6 @@
       "sub_prompt": "Inserisci sul campo username pietro.contadini e nel campo password AaN!7aa e clicca Login",
       "timeout": "10000",
       "expectations": []
-    },
-    {
-      "id": "4094c2c9",
-      "sub_prompt": "Vai sul menu a tendina: Analisys > Smart compare",
-      "timeout": "5000",
-      "expectations": [
-        "non deve essere presente un selettore che contiene: Indicatori bloccabili"
-      ]
     }
   ]
 }
