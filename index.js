@@ -2,7 +2,8 @@
 // ============================================
 // FILE: index.js (VERSIONE FINALE)
 // ============================================
-import "dotenv/config";
+
+
 import OpenAI from "openai";
 import { program } from "commander";
 

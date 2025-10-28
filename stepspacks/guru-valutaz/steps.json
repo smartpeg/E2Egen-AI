@@ -1,43 +1,43 @@
 {
   "steps": [
     {
-      "id": "ba9b14ce",
+      "id": "0677e6a8",
       "sub_prompt": "Attendi il caricamento completato, Clicca sul bottone login ",
-      "timeout": "10000",
+      "timeout": "3000",
       "expectations": [
         "Non deve comparire un banner di errore (esempio: Application Error)"
       ]
     },
     {
-      "id": "7dfa9686",
+      "id": "d9abd7bf",
       "sub_prompt": "Inserisci sul campo username giovanni.ferro e nel campo password 1234QWe! e clicca Login",
-      "timeout": "10000",
+      "timeout": "5000",
       "expectations": [
         "Non deve comparire un banner di errore (esempio: Application Error)"
       ]
     },
     {
-      "id": "9aec8118",
+      "id": "001f884e",
       "sub_prompt": "Vai su Valutazione > Sistemi di valutazione",
-      "timeout": "10000",
+      "timeout": "5000",
       "expectations": []
     },
     {
-      "id": "4bd699c9",
+      "id": "5a03294c",
       "sub_prompt": "Vai su apri dettaglio",
-      "timeout": "10000",
+      "timeout": "6000",
       "expectations": []
     },
     {
-      "id": "0d9f46a1",
+      "id": "d08fc3f7",
       "sub_prompt": "Clicca sul selettore che contiene SEZIONE TEST 2025 - SEZIONE 2",
-      "timeout": "10000",
+      "timeout": "5000",
       "expectations": []
     },
     {
-      "id": "38bf9eca",
+      "id": "f9c8ab48",
       "sub_prompt": "Trova tutti gli id delle selectbox riguardanti al test di autovalutazione e per ognuna devi selezionare 7 poi clicca su SALVA SELEZIONE",
-      "timeout": "10000",
+      "timeout": "5000",
       "expectations": [
         "Deve apparire un toast-body e dentro a questo tag ci deve essere traccia di un success e non di un error o warning"
       ]
