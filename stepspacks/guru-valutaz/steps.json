@@ -35,12 +35,18 @@
       "expectations": []
     },
     {
-      "id": "f9c8ab48",
-      "sub_prompt": "Trova tutti gli id delle selectbox riguardanti al test di autovalutazione e per ognuna devi selezionare 7 poi clicca su SALVA SELEZIONE",
-      "timeout": "5000",
+      "id": "8231af84",
+      "sub_prompt": "Trova tutti gli id delle selectbox visibili riguardanti al test di autovalutazione e per ognuna devi selezionare 7 poi clicca su SALVA SELEZIONE",
+      "timeout": 10000,
       "expectations": [
-        "Deve apparire un toast-body e dentro a questo tag ci deve essere traccia di un success e non di un error o warning"
+        "Deve apparire un toast-body dopo aver cliccato SALVA SELEZIONE e dentro a questo tag ci deve essere traccia di un success e non di un error o warning"
       ]
+    },
+    {
+      "id": "27cf9593",
+      "sub_prompt": "Chiudi il toast cliccando l'icona di chiusura poi dopo 1 secondo Clicca su CHIUDI FASE e accetta la dialog nativa che si apre",
+      "timeout": 10000,
+      "expectations": []
     }
   ]
 }

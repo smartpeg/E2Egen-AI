@@ -19,11 +19,11 @@
       "expectations": []
     },
     {
-      "id": "0a3bc9ac",
+      "id": "f376f0d1",
       "sub_prompt": "Inserisci in vecchia password: 1234QWe! mentre in nuova password e anche in conferma nuova password inserisci: 1234QWe!! poi clicca su SALVA",
       "timeout": "10000",
       "expectations": [
-        "Non deve apparire un banner di warning"
+        "Dopo il click su SALVA devi aspettare 3 secondi in questi 3 secondi NON deve apparire un banner di warning"
       ]
     }
   ]

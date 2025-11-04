@@ -3,7 +3,6 @@
 // FILE: index.js (VERSIONE FINALE)
 // ============================================
 
-
 import OpenAI from "openai";
 import { program } from "commander";
 
@@ -16,7 +15,7 @@ import { TestReporter } from "./core/TestReporter.js";
 import { TestRunner } from "./core/TestRunner.js";
 import { ConfigManager } from "./core/ConfigManager.js";
 import { MockOpenAI } from "./mock-openai.js";
-
+import { Cleaner } from "./utils/Cleaner.js";
 /* -----------------------------------------------
    CLI CONFIGURATION
 -------------------------------------------------- */
@@ -38,8 +37,13 @@ program
   .option("--htmlclean-keep <items>", "Comma-separated elements to keep", "")
   .option("--nocache", "Disable cache usage")
   .option("--stepspack <name>", "Use steps pack from ./stepspacks/<name>")
-  .option("--html-report", "Generate HTML report");
-  //.option("--stop-on-error", "Stop execution on first critical error");
+  .option("--html-report", "Generate HTML report")
+  .option(
+    "--clean <items>",
+    "To be able to clean: only orphans for now",
+    "orphans"
+  );
+//.option("--stop-on-error", "Stop execution on first critical error");
 
 program.parse();
 const options = program.opts();
@@ -52,13 +56,20 @@ const configManager = new ConfigManager(options);
 try {
   // Validate options compatibility
   configManager.validateOptions();
-  configManager.validateStrength(options.strength);
-
+  //configManager.validateStrength(options.strength);
+  configManager.validateSpecifiedItems(
+    ["onlycache", "medium", "high"],
+    options.strength,
+    "strength"
+  );
+  configManager.validateSpecifiedItems(["orphans"], options.clean, "clean");
+  const toClean = options.clean.trim().split(",");
   // Load configuration
   const settings = configManager.load();
   const { execution, ai_agent } = settings;
-  const gloabExpectPrompt = execution.global_expect;
-  //console.log(gloabExpectPrompt);
+
+  const globalExpectationsPrompt = execution.global_expectations;
+
   /* -----------------------------------------------
      STEP CONFIGURATION
   -------------------------------------------------- */
@@ -69,9 +80,11 @@ try {
   };
 
   const strengthSettings = strengthConfig[options.strength];
+
+  // FIX: Imposta outputDir PRIMA di creare gli step
+  Step.outputDir = configManager.getOutputDir();
   Step.maxAttempts = strengthSettings.maxAttempts;
   Step.cacheFirst = options.nocache ? false : strengthSettings.cacheFirst;
-  Step.outputDir = configManager.getOutputDir();
 
   /* -----------------------------------------------
      OPENAI CLIENT INITIALIZATION
@@ -143,9 +156,13 @@ try {
   });
 
   /* -----------------------------------------------
-     LOAD AND VALIDATE STEPS
+     LOAD STEPS 
   -------------------------------------------------- */
   const stepsData = configManager.loadSteps();
+  /* -----------------------------------------------
+     VALIDATE STEPS
+  -------------------------------------------------- */
+
   const steps = stepsData.map((s, i) => {
     let expectations = [];
 
@@ -159,7 +176,16 @@ try {
       console.warn("⚠️ expectations parse error:", err);
     }
     const stepExpectations = [...expectations];
-    if (gloabExpectPrompt && !expectations.includes(gloabExpectPrompt)) expectations.push(gloabExpectPrompt);
+    /*if (gloabExpectPrompt && !expectations.includes(gloabExpectPrompt))
+      expectations.push(gloabExpectPrompt);*/
+
+    if (globalExpectationsPrompt && Array.isArray(globalExpectationsPrompt)) {
+      globalExpectationsPrompt.forEach((element) => {
+        if(!expectations.includes(element)){
+          expectations.push(element);
+        }
+      });
+    }
 
     return new Step({
       index: i + 1,
@@ -168,9 +194,26 @@ try {
       totalSteps: stepsData.length,
       stepsPack: options.stepspack,
       expectations: expectations,
-      stepExpectations: stepExpectations
+      stepExpectations: stepExpectations,
     });
   });
+
+  /* -----------------------------------------------
+     CLEAN /generated orphans
+  -------------------------------------------------- */
+  /*if(options.clean.includes("orphans")){
+    console.log("orphans cleaning");
+    steps.map((value)=>{
+      console.log(value.id);
+    })
+  }*/
+  const cleaner = new Cleaner({
+    stepsPack: options.stepspack,
+    toClean: toClean,
+    steps: steps,
+  });
+
+  cleaner.clean();
 
   /* -----------------------------------------------
      CACHE VALIDATION (onlycache mode)

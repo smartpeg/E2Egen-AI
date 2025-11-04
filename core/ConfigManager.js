@@ -4,6 +4,7 @@
 
 import fs from "fs";
 import dotenv from "dotenv";
+import { deprecate } from "util";
 
 /**
  * Gestisce il caricamento e validazione della configurazione
@@ -15,6 +16,7 @@ export class ConfigManager {
     this.stepsPackPath = null;
     this.outputDir = null;
     this.settings = null;
+    
   }
 
   /**
@@ -59,7 +61,7 @@ export class ConfigManager {
     this.settings.execution.steps_file = `${this.stepsPackPath}/steps.json`;
     this.outputDir = `${this.stepsPackPath}/generated`;
 
-    this.globalExpect = this.settings.execution.global_expect;
+    this.globalExpectations = this.settings.execution.global_expectations;
 
     console.log(`📦 StepsPack: ${packName}`);
     console.log(`📁 Output: ${this.outputDir}`);
@@ -85,10 +87,10 @@ export class ConfigManager {
     return this.settings;
   }
 
-  /**
-   * Valida configurazione strength
-   */
-  validateStrength(strength) {
+
+  //deprecated
+  validateStrength = deprecate(
+    function(strength){
     const valid = ["onlycache", "medium", "high"];
 
     if (!valid.includes(strength)) {
@@ -98,13 +100,26 @@ export class ConfigManager {
     }
 
     return true;
-  }
+  }, "validateStrength è deprecato, utilizza validateSpecifiedItems(standardValidItems = [], items = [], option)");
+
+
+  /**
+   * Valida configurazione delle opzioni
+   */
+  validateSpecifiedItems(standardValidItems = [], items = [], option){
+    if(!standardValidItems.includes(items)){
+      throw new Error(`${option} non valido: Usa: ${standardValidItems.join(", ")}`)
+    }
+    return true;
+  } 
+
+  
 
   /**
    * Valida compatibilità opzioni
    */
   validateOptions() {
-    const { strength, nocache, mock, stepspack } = this.options;
+    const { strength, nocache, mock, stepspack, clean } = this.options;
 
     if (nocache && strength === "onlycache") {
       throw new Error("--nocache e --strength onlycache sono incompatibili");
@@ -178,6 +193,7 @@ export class ConfigManager {
    * Genera summary della configurazione
    */
   getSummary() {
+    console.log("---");
     return {
       stepspack: this.options.stepspack || null,
       outputDir: this.outputDir,
@@ -185,6 +201,7 @@ export class ConfigManager {
       cacheEnabled: !this.options.nocache,
       mockMode: this.options.mock || false,
       entryUrl: this.settings?.execution?.entrypoint_url,
+      clean: this.options.clean || null
     };
   }
 

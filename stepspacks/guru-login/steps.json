@@ -1,16 +1,18 @@
 {
   "steps": [
     {
-      "id": "91c56a9c",
+      "id": "f0d61ecd",
       "sub_prompt": "Attendi il caricamento completato, Clicca sul bottone login ",
       "timeout": "10000",
       "expectations": []
     },
     {
-      "id": "88d5051d",
-      "sub_prompt": "Inserisci sul campo username giovanni.ferro e nel campo password 1234QWe! e clicca Login",
+      "id": "3457d354",
+      "sub_prompt": "Inserisci sul campo username giovanni.ferro e nel campo password pswsbagliata e clicca Login",
       "timeout": "10000",
-      "expectations": []
+      "expectations": [
+        "Devi aspettare 3 secondi dopo il click sul login in questi 3 secondi se appare un banner di errore che puo aver scritto Username o password errata lancia errore"
+      ]
     }
   ]
 }

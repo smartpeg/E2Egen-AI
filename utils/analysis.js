@@ -3,8 +3,8 @@ import { program } from "commander";
 
 program
   .name("AI Driven Cost Analysis")
-  .description("Analizza costi, token, medie globali, failed steps e duration")
-  .version("1.0.0")
+  .description("Analizza costi, token, medie globali, failed steps, duration e trend di efficienza")
+  .version("1.2.0")
   .option(
     "--stepspacks <name>",
     "Comma-separated values (e.g. stepspack1,stepspack2)",
@@ -30,7 +30,10 @@ const USD_TO_EUR = 0.92;
   let totRuns = 0;
   let totSteps = 0;
   let totFailedSteps = 0;
-  let totDurationMs = 0; // durata totale in ms
+  let totDurationMs = 0;
+
+  let weightedDeclineSum = 0;
+  let totalWeightedSteps = 0;
 
   console.log("Totale stepspacks:", stepspacks.length);
 
@@ -51,15 +54,19 @@ const USD_TO_EUR = 0.92;
     let failedStepsSP = 0;
     let durationSP = 0;
 
+    const costs = []; // costi per run
+
     for (const run of json.runs) {
       tokenOutSP += run.usage.output_tokens;
       tokenInSP += run.usage.input_tokens;
       tokenCacheSP += run.usage.cached_tokens;
       costsSP += run.usage.calculated_cost;
       totalResultsSP += run.results.length;
-      durationSP += run.duration_ms; // sommo la durata del run
+      durationSP += run.duration_ms;
 
-      // Conteggio step falliti filtrati
+      if (run.usage.calculated_cost > 0) costs.push(run.usage.calculated_cost);
+
+      // Conteggio step falliti
       const failedSteps = run.results.filter(step => {
         if (step.status !== "error") return false;
         if (step.attempts === 1) {
@@ -76,20 +83,37 @@ const USD_TO_EUR = 0.92;
 
     const avgTokensOutPerRun = tokenOutSP / json.runs.length;
     const avgTokensInPerRun = tokenInSP / json.runs.length;
-    const avgFailedStepsPerRun = failedStepsSP / json.runs.length;
     const failedPercentage = (failedStepsSP / totalResultsSP) * 100;
-    const avgDurationPerRun = durationSP / json.runs.length; // in ms
-    const avgDurationPerStep = durationSP / totalResultsSP; // in ms
+    const avgDurationPerRun = durationSP / json.runs.length;
+
+    // === CALCOLO TASSO DI DISCESA COSTO (weighted) ===
+    let declineRate = 0;
+    if (costs.length > 1) {
+      let weightedSum = 0;
+      let weightedSteps = 0;
+      for (let i = 1; i < costs.length; i++) {
+        const prev = costs[i - 1];
+        const curr = costs[i];
+        if (curr < prev) { // consideriamo solo decrementi
+          const rate = ((prev - curr) / prev) * 100;
+          weightedSum += rate * json.runs[i].results.length;
+          weightedSteps += json.runs[i].results.length;
+        }
+      }
+      if (weightedSteps > 0) declineRate = weightedSum / weightedSteps;
+
+      weightedDeclineSum += weightedSum;
+      totalWeightedSteps += weightedSteps;
+    }
 
     console.log(`\n📦 Stepspack: ${sp}`);
     console.log(`  Runs: ${json.runs.length}`);
     console.log(`  Steps: ${totalResultsSP}`);
     console.log(`  Avg token OUT per run: ${avgTokensOutPerRun.toFixed(2)}`);
     console.log(`  Avg token IN per run: ${avgTokensInPerRun.toFixed(2)}`);
-    console.log(`  Avg failed steps per run: ${avgFailedStepsPerRun.toFixed(2)}`);
     console.log(`  Failed steps %: ${failedPercentage.toFixed(2)}%`);
-    console.log(`  Avg duration per run: ${(avgDurationPerRun/1000).toFixed(2)} s`);
-    console.log(`  Avg duration per step: ${(avgDurationPerStep/1000).toFixed(2)} s`);
+    console.log(`  Avg duration per run: ${(avgDurationPerRun / 1000).toFixed(2)} s`);
+    console.log(`📉 Weighted cost decline rate: ${declineRate.toFixed(2)}%`);
 
     totalTO += tokenOutSP;
     totalTI += tokenInSP;
@@ -101,15 +125,17 @@ const USD_TO_EUR = 0.92;
     totDurationMs += durationSP;
   }
 
-  // Medie globali
+  // === MEDIE GLOBALI ===
   const avgGlobalOutPerRun = totalTO / totRuns;
   const avgGlobalInPerRun = totalTI / totRuns;
   const avgGlobalOutPerStep = totalTO / totSteps;
   const avgGlobalInPerStep = totalTI / totSteps;
-  const avgGlobalFailedStepsPerRun = totFailedSteps / totRuns;
   const globalFailedPercentage = (totFailedSteps / totSteps) * 100;
   const avgGlobalDurationPerRun = totDurationMs / totRuns;
   const avgGlobalDurationPerStep = totDurationMs / totSteps;
+
+  // weighted global decline rate
+  const weightedGlobalDeclineRate = totalWeightedSteps > 0 ? weightedDeclineSum / totalWeightedSteps : 0;
 
   console.log("\n===== TOTALI GLOBALI =====");
   console.log("TOTAL RUNS:", totRuns);
@@ -119,17 +145,16 @@ const USD_TO_EUR = 0.92;
   console.log("TOTAL COSTS:", totCosts.toFixed(6));
   console.log("TOTAL FAILED STEPS:", totFailedSteps);
   console.log("FAILED STEPS %:", globalFailedPercentage.toFixed(2) + "%");
-  console.log("TOTAL DURATION:", (totDurationMs/1000).toFixed(2), "s");
+  console.log("TOTAL DURATION:", (totDurationMs / 1000).toFixed(2), "s");
 
   console.log("\n===== MEDIE GLOBALI =====");
   console.log(`Avg token OUT per run: ${avgGlobalOutPerRun.toFixed(2)}`);
   console.log(`Avg token IN per run: ${avgGlobalInPerRun.toFixed(2)}`);
   console.log(`Avg token OUT per step: ${avgGlobalOutPerStep.toFixed(2)}`);
   console.log(`Avg token IN per step: ${avgGlobalInPerStep.toFixed(2)}`);
-  console.log(`Avg failed steps per run: ${avgGlobalFailedStepsPerRun.toFixed(2)}`);
   console.log(`Failed steps %: ${globalFailedPercentage.toFixed(2)}%`);
-  console.log(`Avg duration per run: ${(avgGlobalDurationPerRun/1000).toFixed(2)} s`);
-  console.log(`Avg duration per step: ${(avgGlobalDurationPerStep/1000).toFixed(2)} s`);
+  console.log(`Avg duration per run: ${(avgGlobalDurationPerRun / 1000).toFixed(2)} s`);
+  console.log(`Avg duration per step: ${(avgGlobalDurationPerStep / 1000).toFixed(2)} s`);
 
   console.log("\n===== COSTI MEDI CALCOLATI =====");
   const TOCost = (avgGlobalOutPerRun * COST_OUTPUT_TOKEN) * USD_TO_EUR;
@@ -137,4 +162,11 @@ const USD_TO_EUR = 0.92;
   console.log(`Avg token OUT cost per run: ${TOCost.toFixed(4)} euro`);
   console.log(`Avg token IN cost per run: ${TICost.toFixed(4)} euro`);
   console.log(`Avg cost per run: ${(TICost + TOCost).toFixed(2)} euro`);
+
+  console.log("\n===== TREND EFFICIENZA =====");
+  console.log(`Weighted global decline rate: ${weightedGlobalDeclineRate.toFixed(2)}%`);
+
+  // Proiezione futura (10 funzionalità)
+  const estimatedCost = (TICost + TOCost) * 10 * (1 - weightedGlobalDeclineRate / 100);
+  console.log(`Costo stimato per 10 funzionalità simili: ${estimatedCost.toFixed(2)} euro`);
 })();
