@@ -3,7 +3,6 @@
 **Intelligent end-to-end test generation powered by GPT-4o** - Describe test steps in natural language, let AI generate the Playwright code, then execute with confidence.
 
 [![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](package.json)
-[![License](https://img.shields.io/badge/license-ISC-green.svg)](LICENSE)
 [![Playwright](https://img.shields.io/badge/playwright-1.56.0-orange.svg)](https://playwright.dev)
 
 ## ✨ Features
@@ -1692,10 +1691,6 @@ node index.js --stepspack checkout-flow --strength high
 # Verify cost calculations:
 cat stepspacks/*/generated/run-logs.json | jq '.runs[-1].usage'
 ```
-
-## 📄 License
-
-This project is licensed under the **ISC License** - see [LICENSE](LICENSE) file for details.
 
 **Summary**: Permission to use, copy, modify, and distribute this software for any purpose with or without fee, provided copyright and permission notice are included.
 
