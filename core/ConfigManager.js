@@ -53,6 +53,7 @@ export class ConfigManager {
       console.log("API key non esiste su env");
       process.exit(1);
     }
+    console.log(`setted api key: ${process.env.OPENAI_API_KEY}`);
    /* const packName = this.options.stepspack;
     this.stepsPackPath = `./stepspacks/${packName}`;
 
