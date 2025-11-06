@@ -38,6 +38,7 @@ program
   .option("--nocache", "Disable cache usage")
   .option("--stepspack <name>", "Use steps pack from ./stepspacks/<name>")
   .option("--html-report", "Generate HTML report")
+  .option("--screenshot", "Generate screenshot report")
   .option(
     "--clean <items>",
     "To be able to clean: only orphans for now",
@@ -120,6 +121,7 @@ try {
   const executor = new TestExecutor({
     outputDir: configManager.getOutputDir(),
     removeItems,
+    screenshot: options.screenshot,
     keepItems,
   });
 

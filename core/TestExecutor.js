@@ -14,12 +14,14 @@ export class TestExecutor {
       remove: options.removeItems || ["comments", "script", "style"],
       keep: options.keepItems || [],
     };
+    this.options = options;
+    console.log("optionscreenshot", options.screenshot);
   }
 
   /**
    * Esegue il codice per uno step
    */
-  async execute(code, page, expect) {
+  async execute(code, page, expect, stepId = "") {
     try {
       await page.waitForLoadState("networkidle");
 
@@ -34,6 +36,9 @@ export class TestExecutor {
 
       return { success: true };
     } catch (error) {
+      if(this.options.screenshot){
+        await page.screenshot({path: `${this.outputDir}/error-step-${stepId}.png`});
+      }
       return {
         success: false,
         error: {

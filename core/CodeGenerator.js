@@ -50,7 +50,7 @@ export class CodeGenerator {
   _resolveVariables(text) {
     // Pattern per trovare ${VARIABILE} o ${VAR_NAME}
     return text.replace(/\$\{([A-Z_][A-Z0-9_]*)\}/g, (match, varName) => {
-      const value = process.env[varName]; // ← Accesso diretto, dotenv NON necessario!
+      const value = process.env[varName]; 
       console.log(value);
       if (value === undefined) {
         console.warn(`⚠️ Variabile d'ambiente non trovata: ${varName}`);
@@ -77,7 +77,7 @@ if(expectations.length > 0){
   prompt += `\nDevono verificarsi queste expectations (devi essere case insensitive) altrimenti se non sono verificate devi
   lanciare un eccezione con il nome dell'expectations: ${expectations}. Devi fare throw new Error SOLO SE una di queste expectations non è verificata. 
   Se devi trovare una stringa, una stringa di errore ecc us page locator e isVisible, NON usare selettori se non li hai trovati nella pagina, 
-  INOLTRE se devi trovare qualunque cosa dopo un click o un altra azione devi: aspettare 7 secondi, e controllare in quei 7 secondi se è presente/visibile
+  INOLTRE se devi trovare qualunque cosa dopo un click o un altra azione devi: aspettare 2 secondi, e controllare in quei 2 secondi se è presente/visibile
   Per accettare oppure rifiutare le dialog native devi usare event listener e poi fare accept() oppure dismiss()`
 }else{
   prompt += "\nNon inserire assolutamente nessun throw new Error";

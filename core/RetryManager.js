@@ -51,7 +51,7 @@ export class RetryManager {
         );
 
         // 2. Esegui il codice
-        const result = await executor.execute(code, page, expect);
+        const result = await executor.execute(code, page, expect, step.id);
 
         if (result.success) {
           step.success = true;
