@@ -11,7 +11,7 @@ export class Cleaner {
   }
 
   clean() {
-    if (this.toClean.includes("orphans")) {
+    if (this.toClean.includes("orphans") && fs.existsSync(this.path)) {
       this._removeOrphansCodes();
     }
   }
